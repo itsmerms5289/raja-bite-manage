@@ -232,7 +232,7 @@ export type Database = {
     }
     Enums: {
       app_role: "student" | "maker" | "manager"
-      food_type: "veg" | "non-veg"
+      food_type: "veg" | "non-veg" | "snacks"
       order_status:
         | "Pending"
         | "Accepted"
@@ -370,7 +370,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["student", "maker", "manager"],
-      food_type: ["veg", "non-veg"],
+      food_type: ["veg", "non-veg", "snacks"],
       order_status: [
         "Pending",
         "Accepted",
