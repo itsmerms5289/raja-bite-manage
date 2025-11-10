@@ -16,6 +16,18 @@ import iceCream from './ice-cream.jpg';
 import lassi from './lassi.jpg';
 import friedRice from './fried-rice.jpg';
 import noodles from './noodles.jpg';
+import pongal from './pongal.jpg';
+import butterNaan from './butter-naan.jpg';
+import prawnMasala from './prawn-masala.jpg';
+import chickenChettinad from './chicken-chettinad.jpg';
+import chickenRice from './chicken-rice.jpg';
+import muttonBiryani from './mutton-biryani.jpg';
+import paperRoast from './paper-roast.jpg';
+import poori from './poori.jpg';
+import chickenSamosa from './chicken-samosa.jpg';
+import paneerStrips from './paneer-strips.jpg';
+import alooParatha from './aloo-paratha.jpg';
+import nonVegThali from './non-veg-thali.jpg';
 
 export const foodImages: Record<string, string> = {
   '/src/assets/food/veg-thali.jpg': vegThali,
@@ -36,4 +48,16 @@ export const foodImages: Record<string, string> = {
   '/src/assets/food/lassi.jpg': lassi,
   '/src/assets/food/fried-rice.jpg': friedRice,
   '/src/assets/food/noodles.jpg': noodles,
+  '/src/assets/food/pongal.jpg': pongal,
+  '/src/assets/food/butter-naan.jpg': butterNaan,
+  '/src/assets/food/prawn-masala.jpg': prawnMasala,
+  '/src/assets/food/chicken-chettinad.jpg': chickenChettinad,
+  '/src/assets/food/chicken-rice.jpg': chickenRice,
+  '/src/assets/food/mutton-biryani.jpg': muttonBiryani,
+  '/src/assets/food/paper-roast.jpg': paperRoast,
+  '/src/assets/food/poori.jpg': poori,
+  '/src/assets/food/chicken-samosa.jpg': chickenSamosa,
+  '/src/assets/food/paneer-strips.jpg': paneerStrips,
+  '/src/assets/food/aloo-paratha.jpg': alooParatha,
+  '/src/assets/food/non-veg-thali.jpg': nonVegThali,
 };
