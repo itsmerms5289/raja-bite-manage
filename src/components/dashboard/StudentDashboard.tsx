@@ -64,7 +64,7 @@ const StudentDashboard = () => {
         .order("name");
 
       if (error) throw error;
-      setMenuItems(data || []);
+      setMenuItems((data || []).filter(item => item !== null));
     } catch (error: any) {
       toast.error("Failed to load menu");
     } finally {
