@@ -47,7 +47,7 @@ const ManagerDashboard = () => {
     name: "",
     description: "",
     price: "",
-    type: "veg" as "veg" | "non-veg",
+    type: "veg" as "veg" | "non-veg" | "snacks",
     estimated_prep_time: "15",
     is_available: true,
     is_combo: false,
@@ -348,7 +348,7 @@ const ManagerDashboard = () => {
               <Label htmlFor="type">Type *</Label>
               <Select
                 value={formData.type}
-                onValueChange={(value: "veg" | "non-veg") => setFormData({ ...formData, type: value })}
+                onValueChange={(value: "veg" | "non-veg" | "snacks") => setFormData({ ...formData, type: value })}
               >
                 <SelectTrigger id="type">
                   <SelectValue />
@@ -356,6 +356,7 @@ const ManagerDashboard = () => {
                 <SelectContent>
                   <SelectItem value="veg">Vegetarian</SelectItem>
                   <SelectItem value="non-veg">Non-Vegetarian</SelectItem>
+                  <SelectItem value="snacks">Snacks</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -48,6 +48,7 @@ const StudentDashboard = () => {
   const [orderType, setOrderType] = useState<"dining" | "takeaway">("dining");
   const [specialNotes, setSpecialNotes] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "card" | "upi" | "wallet">("cash");
+  const [upiMethod, setUpiMethod] = useState<"gpay" | "phonepe" | "paytm">("gpay");
 
   useEffect(() => {
     fetchMenuItems();
@@ -417,6 +418,24 @@ const StudentDashboard = () => {
                       </Button>
                     ))}
                   </div>
+                  
+                  {paymentMethod === "upi" && (
+                    <div className="mt-3">
+                      <Label className="text-sm">Select UPI App</Label>
+                      <div className="grid grid-cols-3 gap-2 mt-2">
+                        {(["gpay", "phonepe", "paytm"] as const).map((method) => (
+                          <Button
+                            key={method}
+                            size="sm"
+                            variant={upiMethod === method ? "default" : "outline"}
+                            onClick={() => setUpiMethod(method)}
+                          >
+                            {method === "gpay" ? "GPay" : method === "phonepe" ? "PhonePe" : "Paytm"}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="border-t pt-4 space-y-2">
