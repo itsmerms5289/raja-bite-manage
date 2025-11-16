@@ -223,7 +223,7 @@ const MakerDashboard = () => {
                     </Badge>
                   </div>
                   <CardDescription>
-                    {order.profiles.name} • {order.order_type} • {new Date(order.placed_at).toLocaleTimeString()}
+                    {order.profiles?.name ?? "Customer"} • {order.order_type} • {new Date(order.placed_at).toLocaleTimeString()}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -266,7 +266,7 @@ const MakerDashboard = () => {
                         </Badge>
                       </div>
                       <CardDescription>
-                        {order.profiles.name} • {order.order_type} • {new Date(order.placed_at).toLocaleTimeString()}
+                        {order.profiles?.name ?? "Customer"} • {order.order_type} • {new Date(order.placed_at).toLocaleTimeString()}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -285,7 +285,7 @@ const MakerDashboard = () => {
           <DialogHeader>
             <DialogTitle>Order Details</DialogTitle>
             <DialogDescription>
-              Order #{selectedOrder?.id.slice(0, 8)} • {selectedOrder?.profiles.name}
+              Order #{selectedOrder?.id.slice(0, 8)} • {selectedOrder?.profiles?.name ?? "Customer"}
             </DialogDescription>
           </DialogHeader>
 
