@@ -208,7 +208,9 @@ const MakerDashboard = () => {
               </CardContent>
             </Card>
           ) : (
-            pendingOrders.map((order) => (
+            <ScrollArea className="h-[600px]">
+              <div className="space-y-4 pr-4">
+                {pendingOrders.map((order) => (
               <Card
                 key={order.id}
                 className="cursor-pointer hover:shadow-md transition-shadow"
@@ -232,8 +234,10 @@ const MakerDashboard = () => {
                     <p className="text-sm text-muted-foreground mt-2">Note: {order.special_notes}</p>
                   )}
                 </CardContent>
-              </Card>
-            ))
+                </Card>
+              ))}
+              </div>
+            </ScrollArea>
           )}
         </div>
 
