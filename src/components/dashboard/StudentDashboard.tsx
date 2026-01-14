@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { ShoppingCart, Search, Leaf, Drumstick, Package, History, Plus, Minus, ShoppingBag } from "lucide-react";
+import { ShoppingCart, Search, Leaf, Drumstick, Package, History, Plus, Minus, ShoppingBag, QrCode } from "lucide-react";
 
 interface MenuItem {
   id: string;
@@ -49,11 +49,30 @@ const StudentDashboard = () => {
   const [specialNotes, setSpecialNotes] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "card" | "upi" | "wallet">("cash");
   const [upiMethod, setUpiMethod] = useState<"gpay" | "phonepe" | "paytm">("gpay");
+  const [upiQrUrl, setUpiQrUrl] = useState<string | null>(null);
 
   useEffect(() => {
     fetchMenuItems();
     fetchOrders();
+    fetchUpiQr();
   }, []);
+
+  const fetchUpiQr = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("app_settings")
+        .select("value")
+        .eq("key", "upi_qr_url")
+        .single();
+
+      if (error && error.code !== "PGRST116") throw error;
+      if (data?.value) {
+        setUpiQrUrl(data.value);
+      }
+    } catch (error: any) {
+      console.error("Failed to load QR settings");
+    }
+  };
 
   const fetchMenuItems = async () => {
     try {
@@ -420,20 +439,45 @@ const StudentDashboard = () => {
                   </div>
                   
                   {paymentMethod === "upi" && (
-                    <div className="mt-3">
-                      <Label className="text-sm">Select UPI App</Label>
-                      <div className="grid grid-cols-3 gap-2 mt-2">
-                        {(["gpay", "phonepe", "paytm"] as const).map((method) => (
-                          <Button
-                            key={method}
-                            size="sm"
-                            variant={upiMethod === method ? "default" : "outline"}
-                            onClick={() => setUpiMethod(method)}
-                          >
-                            {method === "gpay" ? "GPay" : method === "phonepe" ? "PhonePe" : "Paytm"}
-                          </Button>
-                        ))}
+                    <div className="mt-3 space-y-4">
+                      <div>
+                        <Label className="text-sm">Select UPI App</Label>
+                        <div className="grid grid-cols-3 gap-2 mt-2">
+                          {(["gpay", "phonepe", "paytm"] as const).map((method) => (
+                            <Button
+                              key={method}
+                              size="sm"
+                              variant={upiMethod === method ? "default" : "outline"}
+                              onClick={() => setUpiMethod(method)}
+                            >
+                              {method === "gpay" ? "GPay" : method === "phonepe" ? "PhonePe" : "Paytm"}
+                            </Button>
+                          ))}
+                        </div>
                       </div>
+                      
+                      {upiQrUrl && (
+                        <div className="flex flex-col items-center p-4 border rounded-lg bg-muted/50">
+                          <Label className="text-sm mb-2">Scan QR Code to Pay</Label>
+                          <img 
+                            src={upiQrUrl} 
+                            alt="UPI QR Code" 
+                            className="max-w-[180px] max-h-[180px] rounded-lg border shadow-sm"
+                          />
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Pay ₹{total.toFixed(2)} using any UPI app
+                          </p>
+                        </div>
+                      )}
+                      
+                      {!upiQrUrl && (
+                        <div className="flex flex-col items-center p-4 border rounded-lg bg-muted/50">
+                          <QrCode className="h-12 w-12 text-muted-foreground" />
+                          <p className="text-sm text-muted-foreground mt-2">
+                            QR code not available. Please pay at counter.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

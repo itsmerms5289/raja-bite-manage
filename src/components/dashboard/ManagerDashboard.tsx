@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, BarChart3, Settings, UtensilsCrossed } from "lucide-react";
+import { Plus, Edit, Trash2, BarChart3, Settings, UtensilsCrossed, QrCode, Upload } from "lucide-react";
 
 interface MenuItem {
   id: string;
@@ -52,9 +52,13 @@ const ManagerDashboard = () => {
     is_available: true,
     is_combo: false,
   });
+  const [upiQrUrl, setUpiQrUrl] = useState<string>("");
+  const [newQrUrl, setNewQrUrl] = useState<string>("");
+  const [savingQr, setSavingQr] = useState(false);
 
   useEffect(() => {
     fetchData();
+    fetchQrSettings();
   }, []);
 
   const fetchData = async () => {
@@ -62,6 +66,45 @@ const ManagerDashboard = () => {
       await Promise.all([fetchMenuItems(), fetchStats()]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchQrSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("app_settings")
+        .select("value")
+        .eq("key", "upi_qr_url")
+        .single();
+
+      if (error && error.code !== "PGRST116") throw error;
+      if (data?.value) {
+        setUpiQrUrl(data.value);
+        setNewQrUrl(data.value);
+      }
+    } catch (error: any) {
+      console.error("Failed to load QR settings");
+    }
+  };
+
+  const handleSaveQr = async () => {
+    setSavingQr(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const { error } = await supabase
+        .from("app_settings")
+        .update({ value: newQrUrl, updated_at: new Date().toISOString(), updated_by: session?.user?.id })
+        .eq("key", "upi_qr_url");
+
+      if (error) throw error;
+      
+      setUpiQrUrl(newQrUrl);
+      toast.success("UPI QR code updated successfully");
+    } catch (error: any) {
+      toast.error("Failed to update QR code");
+    } finally {
+      setSavingQr(false);
     }
   };
 
@@ -204,6 +247,10 @@ const ManagerDashboard = () => {
             <UtensilsCrossed className="h-4 w-4 mr-2" />
             Menu Management
           </TabsTrigger>
+          <TabsTrigger value="settings">
+            <QrCode className="h-4 w-4 mr-2" />
+            Payment QR
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="stats" className="space-y-4">
@@ -287,6 +334,64 @@ const ManagerDashboard = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <QrCode className="h-5 w-5" />
+                UPI Payment QR Code
+              </CardTitle>
+              <CardDescription>
+                Upload or update your UPI QR code for customers to scan during payment
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="qr-url">QR Code Image URL</Label>
+                    <Input
+                      id="qr-url"
+                      placeholder="https://example.com/your-qr-code.png"
+                      value={newQrUrl}
+                      onChange={(e) => setNewQrUrl(e.target.value)}
+                      className="mt-2"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Enter the URL of your UPI QR code image
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={handleSaveQr} 
+                    disabled={savingQr || newQrUrl === upiQrUrl}
+                    className="w-full"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    {savingQr ? "Saving..." : "Save QR Code"}
+                  </Button>
+                </div>
+                <div className="flex flex-col items-center justify-center p-4 border rounded-lg bg-muted/50">
+                  {upiQrUrl ? (
+                    <div className="space-y-2 text-center">
+                      <img 
+                        src={upiQrUrl} 
+                        alt="UPI QR Code" 
+                        className="max-w-[200px] max-h-[200px] rounded-lg border shadow-sm"
+                      />
+                      <p className="text-sm text-muted-foreground">Current QR Code</p>
+                    </div>
+                  ) : (
+                    <div className="text-center space-y-2">
+                      <QrCode className="h-16 w-16 text-muted-foreground mx-auto" />
+                      <p className="text-sm text-muted-foreground">No QR code set</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 
