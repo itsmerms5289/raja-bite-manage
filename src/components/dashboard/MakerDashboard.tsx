@@ -285,7 +285,7 @@ const MakerDashboard = () => {
       </div>
 
       <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Order Details</DialogTitle>
             <DialogDescription>
@@ -385,7 +385,7 @@ const MakerDashboard = () => {
       </Dialog>
 
       <Dialog open={showDenyDialog} onOpenChange={setShowDenyDialog}>
-        <DialogContent>
+        <DialogContent className="max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Deny Order</DialogTitle>
             <DialogDescription>Please provide a reason for denying this order</DialogDescription>
